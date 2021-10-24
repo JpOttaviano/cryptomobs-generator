@@ -1,0 +1,2 @@
+# cryptomobsGenerator
+CryptoMobs asset generator.
