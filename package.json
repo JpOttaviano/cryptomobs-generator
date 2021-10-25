@@ -1,0 +1,31 @@
+{
+  "name": "cryptomobs-generator",
+  "version": "1.0.0",
+  "description": "CryptoMobs asset generator.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier-fix": "prettier --write \"src/**/*.ts\"",
+    "lint": "npm run prettier-fix && eslint . --ext .ts",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JpOttaviano/cryptomobs-generator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JpOttaviano/cryptomobs-generator/issues"
+  },
+  "homepage": "https://github.com/JpOttaviano/cryptomobs-generator#readme",
+  "dependencies": {
+    "gif-encoder-2": "^1.0.5",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.1.0",
+    "prettier": "^2.4.1"
+  }
+}

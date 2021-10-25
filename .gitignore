@@ -1,0 +1,11 @@
+# Dependencies
+node_modules
+
+# Compiled code
+dist
+
+*.DS_STORE
+
+.env
+.env.dev
+.env.prod
