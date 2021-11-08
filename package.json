@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/execution.ts",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
     "lint": "npm run prettier-fix && eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix"
@@ -20,11 +21,14 @@
   },
   "homepage": "https://github.com/JpOttaviano/cryptomobs-generator#readme",
   "dependencies": {
+    "canvas": "^2.8.0",
     "gif-encoder-2": "^1.0.5",
+    "jimp": "^0.16.1",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   },
   "devDependencies": {
+    "@types/node": "^16.11.6",
     "eslint": "^8.1.0",
     "prettier": "^2.4.1"
   }

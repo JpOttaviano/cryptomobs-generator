@@ -1,0 +1,35 @@
+import fs from "fs";
+import {
+  createAllPossibleNFTs,
+  createFrame,
+  generateNewAsset,
+} from "./generator/mobGenerator";
+import { Traits } from "./generator/types";
+
+async function createAll(): Promise<void> {
+  await createAllPossibleNFTs();
+}
+
+async function frameTest(): Promise<Buffer> {
+  const traits: Traits = {
+    species: "skeleton",
+    color: "pink",
+    background: "balck",
+    hat: "top",
+    eyewear: "goof",
+  };
+  const image = await createFrame(traits, 1);
+  fs.writeFileSync("test.png", image);
+  return image;
+}
+
+async function gifTest(): Promise<Buffer> {
+  const gif = await generateNewAsset("d0453");
+  console.log(gif);
+  fs.writeFileSync("test.gif", gif);
+  return gif;
+}
+
+const images = createAll().then(() => {
+  console.log("succes");
+});
