@@ -14,7 +14,7 @@ async function frameTest(): Promise<Buffer> {
   const traits: Traits = {
     species: "skeleton",
     color: "pink",
-    background: "balck",
+    background: "neondilth",
     hat: "top",
     eyewear: "goof",
   };
@@ -24,12 +24,14 @@ async function frameTest(): Promise<Buffer> {
 }
 
 async function gifTest(): Promise<Buffer> {
-  const gif = await generateNewAsset("d0453");
+  const gif = await generateNewAsset("d01232");
   console.log(gif);
   fs.writeFileSync("test.gif", gif);
   return gif;
 }
 
-const images = createAll().then(() => {
+/*const images = createAll().then(() => {
   console.log("succes");
-});
+});*/
+
+const img = createAll();

@@ -7,27 +7,59 @@ export type Mob = {
 export type Traits = {
   species: Species;
   color: Color;
-  background: string;
-  hat?: Hats;
+  background?: Background;
+  hat?: Hat;
   eyewear?: Glasses;
-  weapon?: string;
 };
 
-export const colors = ["base", "emerald", "aquamarine", "golden", "pink"];
+export type Attribute = {
+  trait_type: string;
+  value: string;
+};
 
-export const glasses = ["", "geek", "sun", "cyberpunk", "vaporwave", "goof"];
+export type Metadata = {
+  description: string;
+  external_url: string;
+  image: string;
+  name: string;
+  attributes: Attribute[];
+};
+export const backgrounds = ["neondilth", "snsetdilth", "vapordilth"];
+
+export const colors = [
+  "base",
+  "emerald",
+  "aquamarine",
+  "golden",
+  "pink",
+  "crimson",
+  "rainbow",
+];
+
+export const glasses = [
+  "",
+  "geek",
+  "goof",
+  "cyberpunk",
+  "vaporwave",
+  "sun",
+  "synthblue",
+  "synthred",
+  "robot",
+  "specops",
+];
 
 export const hats = [
   "",
-  "bluecap",
-  "redcap",
   "bowler",
   "top",
   "witchblue",
   "witchpurple",
   "santa",
   "leaf",
-  "gnome",
+  "pope",
+  "officer",
+  "cowboy",
 ];
 
 export const species = [
@@ -45,12 +77,6 @@ export type Color = typeof colors[number];
 
 export type Glasses = typeof glasses[number];
 
-export type Hats = typeof hats[number];
+export type Hat = typeof hats[number];
 
-export type Weapon =
-  | ""
-  | "archer"
-  | "warrior"
-  | "executioner"
-  | "mage"
-  | "berserk";
+export type Background = typeof backgrounds[number];

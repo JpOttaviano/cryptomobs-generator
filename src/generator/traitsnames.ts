@@ -1,16 +1,54 @@
-const colors = ["", "emerald", "aquamarine", "golden", "pink"];
+export const type = [
+  "Normal",
+  "Poison",
+  "Ice",
+  "Golden",
+  "Cursed",
+  "Crimson",
+  "Rainbow",
+];
 
-const glasses = ["", "geek", "cool", "cyberpunk", "vaporwave", "goof"];
+export const eyes = [
+  "None",
+  "3D",
+  "Comedian",
+  "Cyberpunk",
+  "Vaporwave",
+  "Sunglasses",
+  "Blue Synth",
+  "Red Synth",
+  "Robot",
+  "Nigth Vision",
+];
 
-const hats = ["", "holy", "elegant", "sporty", "festive", "witch"];
+export const head = [
+  "None",
+  "Bowler",
+  "Top",
+  "Blue Witch",
+  "Purple Witch",
+  "Stocking Cap",
+  "Leaf",
+  "Pope Tiara",
+  "Officer",
+  "Cowboy",
+  "Halo",
+];
 
-const species = ["skeleton", "slime", "goblin", "troll", "demoness", "mimic"];
+export const species = [
+  "Skeleton",
+  "Slime",
+  "Goblin",
+  "Troll",
+  "Demoness",
+  "Mimic",
+];
 
-export type Color = typeof colors[number];
+export type Color = typeof type[number];
 
-export type Glasses = typeof glasses[number];
+export type Glasses = typeof eyes[number];
 
-export type Hats = typeof hats[number];
+export type Hats = typeof head[number];
 
 export type Weapon =
   | ""

@@ -8,7 +8,8 @@
     "dev": "ts-node src/execution.ts",
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
     "lint": "npm run prettier-fix && eslint . --ext .ts",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "cloudtest": "ts-node src/test.ts"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   "homepage": "https://github.com/JpOttaviano/cryptomobs-generator#readme",
   "dependencies": {
     "canvas": "^2.8.0",
+    "cloudinary": "1.28.1",
     "gif-encoder-2": "^1.0.5",
     "jimp": "^0.16.1",
     "ts-node": "^10.4.0",
