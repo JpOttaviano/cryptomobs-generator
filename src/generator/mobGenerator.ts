@@ -1,12 +1,66 @@
 import fs from "fs";
 import Jimp from "jimp";
+import sharp from "sharp";
 import { createCanvas, Image } from "canvas";
 import GIFEncoder from "gif-encoder-2";
-import cloudinary from "cloudinary";
 import { backgrounds, colors, glasses, hats, species, Traits } from "./types";
+import { uploadToCloudinary } from "../upload/cloudinary";
+
+const DIM_X = 1280;
+const DIM_Y = 1920;
+const PLTFRM_PATH = "./src/assets/backgrounds/platform.png";
+const X_OFFSET = 0;
+const Y_OFFSET = 125;
 
 function generateRandomDNA(): string {
   return Math.floor(Math.random() * 100).toString();
+}
+
+export async function createSharpFrame(
+  traits: Traits,
+  index: number
+): Promise<Buffer> {
+  // retrieve traits from traits id
+  const { color, background, species, eyewear, hat } = traits;
+  const mobPath = `./src/assets/mobs/${species}`;
+  const colorPath = `${mobPath}/body/${color}/${index}.png`;
+  const eyePath =
+    eyewear != "" ? `${mobPath}/glasses/${eyewear}/${index}.png` : undefined;
+  const hatPath = hat != "" ? `${mobPath}/hats/${hat}/${index}.png` : undefined;
+  const backgroundPath = `./src/assets/backgrounds/${background}.png`;
+
+  const composites = [];
+
+  //composites.push(PLTFRM_PATH);
+
+  composites.push({
+    input: colorPath,
+    top: Y_OFFSET,
+    left: X_OFFSET,
+  });
+
+  // generate frame with traits
+  if (hatPath) {
+    composites.push({
+      input: hatPath,
+      top: Y_OFFSET,
+      left: X_OFFSET,
+    });
+  }
+  if (eyePath) {
+    composites.push({
+      input: eyePath,
+      top: Y_OFFSET,
+      left: X_OFFSET,
+    });
+  }
+  //const image = await Jimp.read(colorPath);
+
+  const imageBuffer = await sharp(backgroundPath)
+    .composite(composites)
+    .toBuffer();
+  //console.log(imageBuffer);
+  return imageBuffer;
 }
 
 export async function createFrame(
@@ -24,7 +78,7 @@ export async function createFrame(
 
   const composites = [];
 
-  composites.push("./src/assets/backgrounds/platform.png");
+  //composites.push(PLTFRM_PATH);
 
   composites.push(colorPath);
 
@@ -40,10 +94,10 @@ export async function createFrame(
   const image = await Jimp.read(backgroundPath);
   for (const composite of composites) {
     const compositeImage = await Jimp.read(composite);
-    image.composite(compositeImage, 0, 0);
+    image.composite(compositeImage, 0, 100);
   }
   const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
-  //console.log(buffer);
+  console.log(buffer);
   return buffer;
 }
 
@@ -77,21 +131,19 @@ export async function generateNewAsset(dna: string): Promise<Buffer> {
   // genertate 4 frames with traits id
   const frames = [];
 
-  const encoder = new GIFEncoder(320, 480, "neuquant");
+  const encoder = new GIFEncoder(DIM_X, DIM_Y, "octree");
   encoder.setDelay(130);
   encoder.start();
 
-  const canvas = createCanvas(320, 480);
+  const canvas = createCanvas(DIM_X, DIM_Y);
   const ctx = canvas.getContext("2d");
 
   for (let i = 0; i < 5; i++) {
     const frameNum = i < 2 ? 1 : i > 3 ? 2 : i;
-    const buffer = await createFrame(traits, frameNum);
+    const buffer = await createSharpFrame(traits, frameNum);
     await new Promise<void>(async (resolve) => {
       const image = new Image();
       image.onload = () => {
-        ctx.fillStyle = "#b3b3cc";
-        ctx.fillRect(0, 0, 320, 480);
         ctx.drawImage(image, 0, 0);
         encoder.addFrame(ctx);
         resolve();
@@ -118,36 +170,13 @@ async function generateRandomNFTAsset(): Promise<void> {
   fs.writeFileSync(path, asset);
 }
 
-async function uploadToCloudinary(name: string, buffer: Buffer): Promise<void> {
-  // Upload asset to cloudinary
-  console.log(`Uploading asset: ${name}`);
-  cloudinary.v2.config({
-    cloud_name: "",
-    api_key: "",
-    api_secret: "",
-  });
-  const jsonName = `assets/${name}`;
-  const data = buffer.toString("base64");
-  const base64String = `data:image/gif;base64,${data}`;
-  const res = await cloudinary.v2.uploader.upload(
-    base64String,
-    { public_id: jsonName },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log(result);
-    }
-  );
-  //console.log(res)
-}
-
 async function generateNFTAssetFromDNA(dna: string): Promise<void> {
   // Generate Asset
   const asset = await generateNewAsset(dna);
 
   // Upload asset to cloudinary
   //await uploadToCloudinary(dna, asset);
+  //console.log(upldRes);
 
   // Save Asset file by dna
   const path = `./nfts/${dna.toString()}.gif`;

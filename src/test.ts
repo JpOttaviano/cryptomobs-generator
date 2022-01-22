@@ -1,4 +1,5 @@
-import * as cloudinary from "cloudinary";
+import dotenv from "dotenv";
+/*import * as cloudinary from "cloudinary";
 import { generateJsons } from "./generator/metadataGenerator";
 
 async function metadataTest(): Promise<void> {
@@ -29,8 +30,11 @@ async function metadataTest(): Promise<void> {
   }
 }
 
-void (async function () {
+/*void (async function () {
   console.log("Starting");
   await metadataTest();
   console.log("Done");
-})();
+})();*/
+dotenv.config();
+
+console.log(process.env.CLOUD_NAME);
