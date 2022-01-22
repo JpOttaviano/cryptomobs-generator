@@ -24,7 +24,12 @@ export type Metadata = {
   name: string;
   attributes: Attribute[];
 };
-export const backgrounds = ["neondilth", "snsetdilth", "vapordilth"];
+export const backgrounds = [
+  "smoothDawn",
+  "smoothNight",
+  "smoothSnset",
+  "smoothVapor",
+];
 
 export const colors = [
   "base",
