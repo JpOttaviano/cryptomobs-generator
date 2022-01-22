@@ -147,11 +147,11 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
   const asset = await generateNewAsset(dna);
 
   // Upload asset to cloudinary
-  await uploadToCloudinary(dna, asset);
+  //await uploadToCloudinary(dna, asset);
 
   // Save Asset file by dna
-  //const path = `./nfts/${dna.toString()}.gif`;
-  //fs.writeFileSync(path, asset);
+  const path = `./nfts/${dna.toString()}.gif`;
+  fs.writeFileSync(path, asset);
 }
 
 export function createAllPossibleDNAs(): string[] {
