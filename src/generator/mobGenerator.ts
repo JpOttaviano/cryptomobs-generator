@@ -33,9 +33,11 @@ export async function createSharpFrame(
 
   //composites.push(PLTFRM_PATH);
 
+  const yOffset = species === 'slime' ? 0 : Y_OFFSET;
+
   composites.push({
     input: colorPath,
-    top: Y_OFFSET,
+    top: yOffset,
     left: X_OFFSET,
   });
 
@@ -43,14 +45,14 @@ export async function createSharpFrame(
   if (hatPath) {
     composites.push({
       input: hatPath,
-      top: Y_OFFSET,
+      top: yOffset,
       left: X_OFFSET,
     });
   }
   if (eyePath) {
     composites.push({
       input: eyePath,
-      top: Y_OFFSET,
+      top: yOffset,
       left: X_OFFSET,
     });
   }
