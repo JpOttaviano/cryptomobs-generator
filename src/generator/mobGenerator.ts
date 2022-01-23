@@ -172,12 +172,36 @@ async function generateRandomNFTAsset(): Promise<void> {
   fs.writeFileSync(path, asset);
 }
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 async function generateNFTAssetFromDNA(dna: string): Promise<void> {
   // Generate Asset
   const asset = await generateNewAsset(dna);
 
   // Upload asset to cloudinary
-  //await uploadToCloudinary(dna, asset);
+  try {
+    await uploadToCloudinary(dna, asset);
+  } catch (error) {
+    let retry = 0;
+    console.log(`[ALERT]Error uploading. retrying in 4 secs.`, error);
+    await delay(3000);
+    while (retry < 3) {
+      console.log(`Retry: ${retry}`);
+      try {
+        await uploadToCloudinary(dna, asset);
+        retry = 5;
+      } catch (error) {
+        console.log(`[ALERT]Error uploading again, retyring.`, error);
+        await delay(3000);
+        retry++;
+      }
+    }
+    if(retry === 3) {
+      throw new Error('[ERROR]Error uploading to cloudinary. Aborting.');
+    }
+  }
   //console.log(upldRes);
 
   // Save Asset file by dna
@@ -201,9 +225,16 @@ export function createAllPossibleDNAs(): string[] {
   return dnaList;
 }
 
+export function createDnaListFromStart(start: string): string[] {
+  const dnaList = createAllPossibleDNAs();
+  const startIndex = dnaList.indexOf(start);
+  return dnaList.slice(startIndex);
+}
+
 export async function createAllPossibleNFTs(): Promise<void> {
   // Create a list of all possible DNAs
-  const dnaList = createAllPossibleDNAs();
+  //const dnaList = createAllPossibleDNAs();
+  const dnaList = createDnaListFromStart("d20003")
   console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
   for (const dna of dnaList) {
