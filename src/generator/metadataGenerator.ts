@@ -1,3 +1,4 @@
+import fs from "fs";
 import dotenv from "dotenv";
 import cloudinary from "cloudinary";
 import { eyes, head, type, species } from "./traitsnames";
@@ -125,11 +126,30 @@ export async function uploadMetadata(data: Metadata[]): Promise<void> {
 }
 
 export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
-  const jsons = generateJsons(dnas);
+  //const jsons = generateJsons(dnas);
   let num = 0;
-  for (const json of jsons) {
+  for (const dna of dnas) {
+    const json = generateMetadata(dna);
     console.log(json);
     num++;
+    const path = `./metadata/${dna.toString()}.json`;
+    fs.writeFileSync(path, JSON.stringify(json));
+    if(num > 10) {
+      break;
+    }
   }
   console.log(`${num} jsons created`);
+}
+
+export async function createAndUploadMetadataRngId(dnas: string[]): Promise<void> {
+  let num = 0;
+  while(dnas.length > 0) {
+    const dna = dnas.splice(Math.floor(Math.random()*dnas.length), 1);
+    console.log(dnas.length);
+    const json = generateMetadata(dna[0]);
+    console.log(json);
+    const path = `./metadata/${num}.json`;
+    fs.writeFileSync(path, JSON.stringify(json));
+    num++;
+  }
 }

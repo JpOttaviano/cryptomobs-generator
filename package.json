@@ -8,7 +8,8 @@
     "prettier-fix": "prettier --write \"src/**/*.ts\"",
     "lint": "npm run prettier-fix && eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
-    "test": "ts-node src/test.ts"
+    "test": "ts-node src/test.ts",
+    "metadata": "ts-node src/metadata.ts"
   },
   "repository": {
     "type": "git",
