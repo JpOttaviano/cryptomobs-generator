@@ -1,10 +1,13 @@
+import dotenv from "dotenv";
 import cloudinary from "cloudinary";
 import { eyes, head, type, species } from "./traitsnames";
 import { Attribute, backgrounds, Metadata, Traits } from "./types";
 
-const BASE_IMAGE_URL = "https://res.cloudinary.com/";
-const EXTERNAL_URL = "https://www.cryptom0b5.com/";
-const DESCIPTION = "";
+dotenv.config();
+
+const { BASE_IMAGE_URL } = process.env;
+const EXTERNAL_URL = "https://cryptomobs.world/";
+const DESCIPTION = "Monster escaped from a dungeon.";
 
 function generateAttribute(trait: string, value: string): Attribute {
   return {
@@ -17,34 +20,35 @@ function getTraitAdjective(trait: string): string {
   const traitLower = trait.toLowerCase();
   switch (traitLower) {
     case "3d":
-      return "Geek";
+      return "Geek ";
     case "comedian":
-      return "Goofy";
+      return "Goofy ";
     case "cyberpunk":
     case "vaporwave":
     case "robot":
     case "officer":
     case "cowboy":
-      return trait;
+      return `${trait} `;
     case "sunglasses":
-      return "Cool";
+      return "Cool ";
     case "blue synth":
     case "red synth":
-      return "Glamorous";
+      return "Glamorous ";
     case "nigth vision":
-      return "Nigth";
+      return "PsyOps ";
     case "bowler":
+      return "Classy ";
     case "top":
-      return "Classy";
+      return "Fancy ";
     case "blue witch":
     case "purple witch":
-      return "Magic";
+      return "Magic ";
     case "stocking cap":
-      return "Festive";
+      return "Festive ";
     case "leaf":
-      return "Earth";
+      return "Plant ";
     case "pope tiara":
-      return "Pope";
+      return "Pope ";
     default:
       return "";
   }
@@ -72,7 +76,9 @@ function generateMetadata(dna: string): Metadata {
   const eyeAdj = getTraitAdjective(atEyes);
   const headAdj = getTraitAdjective(atHead);
 
-  const name = `${eyeAdj} ${headAdj} ${atType} ${atSpecies}`;
+  const atName = atType === "Normal" ? "" : `${atType} `;
+
+  const name = `${eyeAdj}${headAdj}${atName}${atSpecies}`;
 
   const metadata: Metadata = {
     description: DESCIPTION,
@@ -122,7 +128,8 @@ export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
   const jsons = generateJsons(dnas);
   let num = 0;
   for (const json of jsons) {
-    const jsonName = `${num}.json`;
+    console.log(json);
     num++;
   }
+  console.log(`${num} jsons created`);
 }

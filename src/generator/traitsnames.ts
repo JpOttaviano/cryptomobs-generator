@@ -40,7 +40,7 @@ export const species = [
   "Slime",
   "Goblin",
   "Troll",
-  "Demoness",
+  "Succubus",
   "Mimic",
 ];
 

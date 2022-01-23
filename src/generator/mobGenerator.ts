@@ -33,7 +33,7 @@ export async function createSharpFrame(
 
   //composites.push(PLTFRM_PATH);
 
-  const yOffset = species === 'slime' ? 0 : Y_OFFSET;
+  const yOffset = species === "slime" ? 0 : Y_OFFSET;
 
   composites.push({
     input: colorPath,
@@ -173,7 +173,7 @@ async function generateRandomNFTAsset(): Promise<void> {
 }
 
 function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function generateNFTAssetFromDNA(dna: string): Promise<void> {
@@ -198,8 +198,8 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
         retry++;
       }
     }
-    if(retry === 3) {
-      throw new Error('[ERROR]Error uploading to cloudinary. Aborting.');
+    if (retry === 3) {
+      throw new Error("[ERROR]Error uploading to cloudinary. Aborting.");
     }
   }
   //console.log(upldRes);
@@ -234,7 +234,7 @@ export function createDnaListFromStart(start: string): string[] {
 export async function createAllPossibleNFTs(): Promise<void> {
   // Create a list of all possible DNAs
   //const dnaList = createAllPossibleDNAs();
-  const dnaList = createDnaListFromStart("d20003")
+  const dnaList = createDnaListFromStart("d20003");
   console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
   for (const dna of dnaList) {
