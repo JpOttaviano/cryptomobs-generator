@@ -134,17 +134,19 @@ export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
     num++;
     const path = `./metadata/${dna.toString()}.json`;
     fs.writeFileSync(path, JSON.stringify(json));
-    if(num > 10) {
+    if (num > 10) {
       break;
     }
   }
   console.log(`${num} jsons created`);
 }
 
-export async function createAndUploadMetadataRngId(dnas: string[]): Promise<void> {
+export async function createAndUploadMetadataRngId(
+  dnas: string[]
+): Promise<void> {
   let num = 0;
-  while(dnas.length > 0) {
-    const dna = dnas.splice(Math.floor(Math.random()*dnas.length), 1);
+  while (dnas.length > 0) {
+    const dna = dnas.splice(Math.floor(Math.random() * dnas.length), 1);
     console.log(dnas.length);
     const json = generateMetadata(dna[0]);
     console.log(json);

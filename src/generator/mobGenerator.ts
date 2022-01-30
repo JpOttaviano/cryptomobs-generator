@@ -10,7 +10,7 @@ const DIM_X = 1280;
 const DIM_Y = 1920;
 const PLTFRM_PATH = "./src/assets/backgrounds/platform.png";
 const X_OFFSET = 0;
-const Y_OFFSET = 125;
+const Y_OFFSET = 0;
 
 function generateRandomDNA(): string {
   return Math.floor(Math.random() * 100).toString();
@@ -31,9 +31,13 @@ export async function createSharpFrame(
 
   const composites = [];
 
-  //composites.push(PLTFRM_PATH);
+  const yOffset = Y_OFFSET;
 
-  const yOffset = species === "slime" ? 0 : Y_OFFSET;
+  composites.push({
+    input: PLTFRM_PATH,
+    top: yOffset,
+    left: X_OFFSET,
+  });
 
   composites.push({
     input: colorPath,
@@ -182,7 +186,8 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
 
   // Upload asset to cloudinary
   try {
-    await uploadToCloudinary(dna, asset);
+    //await uploadToCloudinary(dna, asset);
+    console.log("sipped upload");
   } catch (error) {
     let retry = 0;
     console.log(`[ALERT]Error uploading. retrying in 4 secs.`, error);
@@ -234,7 +239,7 @@ export function createDnaListFromStart(start: string): string[] {
 export async function createAllPossibleNFTs(): Promise<void> {
   // Create a list of all possible DNAs
   //const dnaList = createAllPossibleDNAs();
-  const dnaList = createDnaListFromStart("d20003");
+  const dnaList = createDnaListFromStart("d40300");
   console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
   for (const dna of dnaList) {
