@@ -3,12 +3,20 @@ import Jimp from "jimp";
 import sharp from "sharp";
 import { createCanvas, Image } from "canvas";
 import GIFEncoder from "gif-encoder-2";
-import { backgrounds, colors, glasses, hats, species, Traits } from "./types";
+import {
+  backgrounds,
+  colors,
+  glasses,
+  hats,
+  species,
+  Traits,
+  weapons,
+} from "./types";
 import { uploadToCloudinary } from "../upload/cloudinary";
 
 const DIM_X = 1280;
 const DIM_Y = 1920;
-const PLTFRM_PATH = "./src/assets/backgrounds/platform.png";
+const PLTFRM_PATH = "./src/assets/backgrounds/platform118.png";
 const X_OFFSET = 0;
 const Y_OFFSET = 0;
 
@@ -21,12 +29,14 @@ export async function createSharpFrame(
   index: number
 ): Promise<Buffer> {
   // retrieve traits from traits id
-  const { color, background, species, eyewear, hat } = traits;
+  const { color, background, species, eyewear, hat, weapon } = traits;
   const mobPath = `./src/assets/mobs/${species}`;
   const colorPath = `${mobPath}/body/${color}/${index}.png`;
   const eyePath =
     eyewear != "" ? `${mobPath}/glasses/${eyewear}/${index}.png` : undefined;
   const hatPath = hat != "" ? `${mobPath}/hats/${hat}/${index}.png` : undefined;
+  const weaponPath =
+    weapon != "" ? `${mobPath}/weapons/${weapon}/${index}.png` : undefined;
   const backgroundPath = `./src/assets/backgrounds/${background}.png`;
 
   const composites = [];
@@ -45,6 +55,14 @@ export async function createSharpFrame(
     left: X_OFFSET,
   });
 
+  if (weaponPath) {
+    composites.push({
+      input: weaponPath,
+      top: yOffset,
+      left: X_OFFSET,
+    });
+  }
+
   // generate frame with traits
   if (hatPath) {
     composites.push({
@@ -61,10 +79,12 @@ export async function createSharpFrame(
     });
   }
   //const image = await Jimp.read(colorPath);
-
-  const imageBuffer = await sharp(backgroundPath)
-    .composite(composites)
-    .toBuffer();
+  let imageBuffer;
+  try {
+    imageBuffer = await sharp(backgroundPath).composite(composites).toBuffer();
+  } catch (error) {
+    console.log(error);
+  }
   //console.log(imageBuffer);
   return imageBuffer;
 }
@@ -110,13 +130,17 @@ export async function createFrame(
 function getTraitsFromDNA(dna: string): Traits {
   // retrieve traits from dna
   const traitNums = dna.toString().split("");
-  const [, specie, color, eyewear, hat, background] = traitNums;
+  const [, specie, color, eyewear, hat, weapon] = traitNums;
+
+  // Get Random or looped background?
+  const bckgId = Math.floor(Math.random() * backgrounds.length);
 
   // example:
   const traits: Traits = {
     color: colors[color],
-    background: backgrounds[background],
+    background: backgrounds[bckgId],
     species: species[specie],
+    weapon: weapons[weapon],
     eyewear: glasses[eyewear],
     hat: hats[hat],
   };
@@ -239,7 +263,7 @@ export function createDnaListFromStart(start: string): string[] {
 export async function createAllPossibleNFTs(): Promise<void> {
   // Create a list of all possible DNAs
   //const dnaList = createAllPossibleDNAs();
-  const dnaList = createDnaListFromStart("d40300");
+  const dnaList = createDnaListFromStart("d00000");
   console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
   for (const dna of dnaList) {

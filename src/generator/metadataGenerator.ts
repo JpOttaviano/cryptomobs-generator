@@ -1,8 +1,8 @@
 import fs from "fs";
 import dotenv from "dotenv";
 import cloudinary from "cloudinary";
-import { eyes, head, type, species } from "./traitsnames";
-import { Attribute, backgrounds, Metadata, Traits } from "./types";
+import { eyes, head, type, species, weapons } from "./traitsnames";
+import { Attribute, Metadata } from "./types";
 
 dotenv.config();
 
@@ -20,6 +20,12 @@ function generateAttribute(trait: string, value: string): Attribute {
 function getTraitAdjective(trait: string): string {
   const traitLower = trait.toLowerCase();
   switch (traitLower) {
+    case "bow":
+      return "Archer ";
+    case "halberd":
+      return "Berseker ";
+    case "sword":
+      return "Swordsman ";
     case "3d":
       return "Geek ";
     case "comedian":
@@ -58,28 +64,31 @@ function getTraitAdjective(trait: string): string {
 function generateMetadata(dna: string): Metadata {
   // extracts ttraits from dna
   const traitNums = dna.toString().split("");
-  const [, specie, color, eyewear, hat, background] = traitNums;
+  const [, specie, color, eyewear, hat, weapon] = traitNums;
 
   const atType = type[color];
   const atSpecies = species[specie];
   const atEyes = eyes[eyewear];
   const atHead = head[hat];
+  const atWeapon = weapons[weapon];
 
   const attributes = [
     generateAttribute("type", atType),
     generateAttribute("species", atSpecies),
     generateAttribute("eyes", atEyes),
     generateAttribute("head", atHead),
+    generateAttribute("weapon", atWeapon),
   ];
 
   const image = `${BASE_IMAGE_URL}/${dna}.gif`;
 
   const eyeAdj = getTraitAdjective(atEyes);
   const headAdj = getTraitAdjective(atHead);
+  const weaponAdj = getTraitAdjective(atWeapon);
 
   const atName = atType === "Normal" ? "" : `${atType} `;
 
-  const name = `${eyeAdj}${headAdj}${atName}${atSpecies}`;
+  const name = `${eyeAdj}${headAdj}${atName}${weaponAdj}${atSpecies}`;
 
   const metadata: Metadata = {
     description: DESCIPTION,

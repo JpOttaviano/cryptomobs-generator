@@ -8,6 +8,8 @@ export const type = [
   "Rainbow",
 ];
 
+export const weapons = ["None", "Bow", "Halberd", "Sword"];
+
 export const eyes = [
   "None",
   "3D",
