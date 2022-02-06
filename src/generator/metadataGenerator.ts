@@ -35,6 +35,7 @@ function getTraitAdjective(trait: string): string {
     case "robot":
     case "officer":
     case "cowboy":
+    case "clown":
       return `${trait} `;
     case "sunglasses":
       return "Cool ";
@@ -56,6 +57,10 @@ function getTraitAdjective(trait: string): string {
       return "Plant ";
     case "pope tiara":
       return "Pope ";
+    case "halo":
+      return "Holy ";
+    case "wings":
+      return "Flying ";
     default:
       return "";
   }

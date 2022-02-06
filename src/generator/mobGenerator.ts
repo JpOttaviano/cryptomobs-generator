@@ -36,12 +36,16 @@ function generateRandomDNA(): string {
 export async function createSharpFrame(
   traits: Traits,
   index: number,
-  extraIndex: number
+  bcIndex: number,
+  specIndex: number
 ): Promise<Buffer> {
   // retrieve traits from traits id
   const { color, background, species, eyewear, hat, perk } = traits;
   const mobPath = `./src/assets/mobs/${species}`;
-  const colorPath = `${mobPath}/body/${color}/${index}.png`;
+  const colorPath =
+    color !== "rainbow"
+      ? `${mobPath}/body/${color}/${index}.png`
+      : `${mobPath}/body/${color}/${specIndex}.png`;
   const eyePath =
     eyewear != "" ? `${mobPath}/glasses/${eyewear}/${index}.png` : undefined;
   const hatPath = hat != "" ? `${mobPath}/hats/${hat}/${index}.png` : undefined;
@@ -49,7 +53,7 @@ export async function createSharpFrame(
     perk !== ""
       ? perk != "bloodCircle"
         ? `./src/assets/extras/${perk}/${index}.png`
-        : `./src/assets/extras/${perk}/${extraIndex}.png`
+        : `./src/assets/extras/${perk}/${bcIndex}.png`
       : undefined;
   const backgroundPath = `./src/assets/backgrounds/${background}.png`;
   const composites = [];
@@ -62,7 +66,7 @@ export async function createSharpFrame(
     left: X_OFFSET,
   });
 
-  if (extrPath) {
+  if (extrPath && perk != "wings") {
     composites.push({
       input: extrPath,
       top: yOffset,
@@ -83,6 +87,14 @@ export async function createSharpFrame(
     top: yOffset,
     left: X_OFFSET,
   });
+
+  if (perk == "wings") {
+    composites.push({
+      input: extrPath,
+      top: yOffset,
+      left: X_OFFSET,
+    });
+  }
 
   // generate frame with traits
   if (hatPath) {
@@ -189,10 +201,19 @@ export async function generateNewAsset(dna: string): Promise<Buffer> {
   const canvas = createCanvas(DIM_X, DIM_Y);
   const ctx = canvas.getContext("2d");
 
-  for (let i = 0; i < 5; i++) {
-    const frameNum = i < 2 ? 1 : i > 3 ? 2 : i;
-    const bcfnum = i < 4 ? i + 1 : 1;
-    const buffer = await createSharpFrame(traits, frameNum, bcfnum);
+  // Rainbow slime contains 13 frames for a full loop
+  const frameAmnt =
+    traits.color != "rainbow" ? (traits.species != "mimic" ? 5 : 6) : 13;
+
+  const frameNums = [1, 2, 3, 2, 1, 2, 3, 2, 1, 2, 3, 2, 1];
+  const mimicFrames = [1, 2, 3, 4, 3, 2, 1];
+  let bcIndex = 0;
+
+  for (let i = 0; i < frameAmnt; i++) {
+    const frameNum = traits.species != "mimic" ? frameNums[i] : mimicFrames[i];
+    bcIndex = bcIndex < 4 ? bcIndex + 1 : 1;
+    const specIndex = i + 1;
+    const buffer = await createSharpFrame(traits, frameNum, bcIndex, specIndex);
     await new Promise<void>(async (resolve) => {
       const image = new Image();
       image.onload = () => {
@@ -260,6 +281,10 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
   fs.writeFileSync(path, asset);
 }
 
+/**
+ * Generate a string[] list of all possible dnas
+ * @returns dna list
+ */
 export function createAllPossibleDNAs(): string[] {
   const dnaList = [];
   for (let s = 0; s < 5; s++) {
@@ -276,10 +301,45 @@ export function createAllPossibleDNAs(): string[] {
   return dnaList;
 }
 
+/**
+ * Create dna list from starting dna (included)
+ * @param start
+ * @returns dna list
+ */
 export function createDnaListFromStart(start: string): string[] {
   const dnaList = createAllPossibleDNAs();
   const startIndex = dnaList.indexOf(start);
   return dnaList.slice(startIndex);
+}
+
+async function generateRainbowSlimes(amount = 5): Promise<void> {}
+
+async function generateCrimsonSkeles(amount = 20): Promise<void> {}
+
+/**
+ * Generate specials assets and replace in dna lists
+ * Specials are:
+ *  - rainbow slime (d16xxx) 5
+ *  - demoness wings (d4xxx4) 5
+ *  - crimson skeleton (d05xxx) 20
+ *  - clown sekeleton (d0xc0x) 5
+ *  - halo (dxxxhx) 15
+ *  - gaming (dxx0gx) 10
+ *  - mimic chest (d6000x) only 3
+ *  - mimic toilette (d6100x) only 1
+ *
+ * rainbow has 13 frames.
+ * mimic and toilette have only 1 model * perks. no hats or eyewear
+ * crimson and rainbow replace colors
+ * halo and gaming replace hats, no eyewear for gaming
+ * sekele clown mask replaces eyewear, no hats
+ * demoness wings replaces perk
+ * @param dnaList
+ */
+async function generateSpecials(dnaList: string[]): Promise<void> {
+  for (const dna of dnaList) {
+    await generateNFTAssetFromDNA(dna);
+  }
 }
 
 async function generateNFTAssetsFromDNAList(
@@ -294,6 +354,9 @@ async function generateNFTAssetsFromDNAList(
   console.log(`Finished generating NFTs for order: ${order}`);
 }
 
+/**
+ * Generate, upload and save all possible NFTS
+ */
 export async function createAllPossibleNFTs(): Promise<void> {
   // Create a list of all possible DNAs
   //const dnaList = createAllPossibleDNAs();

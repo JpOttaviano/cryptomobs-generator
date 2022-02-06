@@ -8,7 +8,7 @@ export const type = [
   "Rainbow",
 ];
 
-export const perks = ["None", "Spirits", "Kraken", "Blood Circle"];
+export const perks = ["None", "Spirits", "Kraken", "Blood Circle", "Wings"];
 
 export const eyes = [
   "None",
@@ -21,6 +21,7 @@ export const eyes = [
   "Red Synth",
   "Robot",
   "Nigth Vision",
+  "Clown",
 ];
 
 export const head = [
