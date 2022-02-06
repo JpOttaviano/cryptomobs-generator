@@ -24,7 +24,7 @@ async function frameTest(): Promise<Buffer> {
 }
 
 async function gifTest(): Promise<Buffer> {
-  const gif = await generateNewAsset("d01232");
+  const gif = await generateNewAsset("d01233");
   console.log(gif);
   fs.writeFileSync("test.gif", gif);
   return gif;
@@ -33,5 +33,7 @@ async function gifTest(): Promise<Buffer> {
 /*const images = createAll().then(() => {
   console.log("succes");
 });*/
+
+//const img = gifTest();
 
 const img = createAll();

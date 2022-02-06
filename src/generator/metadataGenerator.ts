@@ -1,8 +1,8 @@
 import fs from "fs";
 import dotenv from "dotenv";
 import cloudinary from "cloudinary";
-import { eyes, head, type, species } from "./traitsnames";
-import { Attribute, backgrounds, Metadata, Traits } from "./types";
+import { eyes, head, type, species, perks } from "./traitsnames";
+import { Attribute, Metadata } from "./types";
 
 dotenv.config();
 
@@ -20,6 +20,12 @@ function generateAttribute(trait: string, value: string): Attribute {
 function getTraitAdjective(trait: string): string {
   const traitLower = trait.toLowerCase();
   switch (traitLower) {
+    case "spirits":
+      return "Spiritist ";
+    case "kraken":
+      return "Summoner ";
+    case "blood circle":
+      return "Cultist ";
     case "3d":
       return "Geek ";
     case "comedian":
@@ -58,28 +64,31 @@ function getTraitAdjective(trait: string): string {
 function generateMetadata(dna: string): Metadata {
   // extracts ttraits from dna
   const traitNums = dna.toString().split("");
-  const [, specie, color, eyewear, hat, background] = traitNums;
+  const [, specie, color, eyewear, hat, perk] = traitNums;
 
   const atType = type[color];
   const atSpecies = species[specie];
   const atEyes = eyes[eyewear];
   const atHead = head[hat];
+  const atPerk = perks[perk];
 
   const attributes = [
     generateAttribute("type", atType),
     generateAttribute("species", atSpecies),
     generateAttribute("eyes", atEyes),
     generateAttribute("head", atHead),
+    generateAttribute("perk", atPerk),
   ];
 
   const image = `${BASE_IMAGE_URL}/${dna}.gif`;
 
   const eyeAdj = getTraitAdjective(atEyes);
   const headAdj = getTraitAdjective(atHead);
+  const perkAdj = getTraitAdjective(atPerk);
 
   const atName = atType === "Normal" ? "" : `${atType} `;
 
-  const name = `${eyeAdj}${headAdj}${atName}${atSpecies}`;
+  const name = `${eyeAdj}${headAdj}${atName}${perkAdj}${atSpecies}`;
 
   const metadata: Metadata = {
     description: DESCIPTION,
@@ -134,17 +143,19 @@ export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
     num++;
     const path = `./metadata/${dna.toString()}.json`;
     fs.writeFileSync(path, JSON.stringify(json));
-    if(num > 10) {
+    if (num > 10) {
       break;
     }
   }
   console.log(`${num} jsons created`);
 }
 
-export async function createAndUploadMetadataRngId(dnas: string[]): Promise<void> {
+export async function createAndUploadMetadataRngId(
+  dnas: string[]
+): Promise<void> {
   let num = 0;
-  while(dnas.length > 0) {
-    const dna = dnas.splice(Math.floor(Math.random()*dnas.length), 1);
+  while (dnas.length > 0) {
+    const dna = dnas.splice(Math.floor(Math.random() * dnas.length), 1);
     console.log(dnas.length);
     const json = generateMetadata(dna[0]);
     console.log(json);
