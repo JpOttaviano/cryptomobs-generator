@@ -8,7 +8,7 @@ export const type = [
   "Rainbow",
 ];
 
-export const weapons = ["None", "Bow", "Halberd", "Sword"];
+export const perks = ["None", "Spirits", "Kraken", "Blood Circle"];
 
 export const eyes = [
   "None",
@@ -52,12 +52,6 @@ export type Glasses = typeof eyes[number];
 
 export type Hats = typeof head[number];
 
-export type Weapon =
-  | ""
-  | "archer"
-  | "warrior"
-  | "executioner"
-  | "mage"
-  | "berserk";
+export type Perks = typeof perks[number];
 
 export type Species = typeof species[number];

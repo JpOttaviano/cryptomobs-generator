@@ -10,7 +10,7 @@ export type Traits = {
   background?: Background;
   hat?: Hat;
   eyewear?: Glasses;
-  weapon?: Weapon;
+  perk?: Perk;
 };
 
 export type Attribute = {
@@ -42,7 +42,7 @@ export const colors = [
   "rainbow",
 ];
 
-export const weapons = ["", "bow", "halberd", "sword"];
+export const perks = ["", "spirits", "kraken", "bloodCircle"];
 
 export const glasses = [
   "",
@@ -83,7 +83,7 @@ export type Species = typeof species[number];
 
 export type Color = typeof colors[number];
 
-export type Weapon = typeof weapons[number];
+export type Perk = typeof perks[number];
 
 export type Glasses = typeof glasses[number];
 

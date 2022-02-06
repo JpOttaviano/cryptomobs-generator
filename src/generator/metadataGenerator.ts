@@ -1,7 +1,7 @@
 import fs from "fs";
 import dotenv from "dotenv";
 import cloudinary from "cloudinary";
-import { eyes, head, type, species, weapons } from "./traitsnames";
+import { eyes, head, type, species, perks } from "./traitsnames";
 import { Attribute, Metadata } from "./types";
 
 dotenv.config();
@@ -20,12 +20,12 @@ function generateAttribute(trait: string, value: string): Attribute {
 function getTraitAdjective(trait: string): string {
   const traitLower = trait.toLowerCase();
   switch (traitLower) {
-    case "bow":
-      return "Archer ";
-    case "halberd":
-      return "Berseker ";
-    case "sword":
-      return "Swordsman ";
+    case "spirits":
+      return "Spiritist ";
+    case "kraken":
+      return "Summoner ";
+    case "blood circle":
+      return "Cultist ";
     case "3d":
       return "Geek ";
     case "comedian":
@@ -64,31 +64,31 @@ function getTraitAdjective(trait: string): string {
 function generateMetadata(dna: string): Metadata {
   // extracts ttraits from dna
   const traitNums = dna.toString().split("");
-  const [, specie, color, eyewear, hat, weapon] = traitNums;
+  const [, specie, color, eyewear, hat, perk] = traitNums;
 
   const atType = type[color];
   const atSpecies = species[specie];
   const atEyes = eyes[eyewear];
   const atHead = head[hat];
-  const atWeapon = weapons[weapon];
+  const atPerk = perks[perk];
 
   const attributes = [
     generateAttribute("type", atType),
     generateAttribute("species", atSpecies),
     generateAttribute("eyes", atEyes),
     generateAttribute("head", atHead),
-    generateAttribute("weapon", atWeapon),
+    generateAttribute("perk", atPerk),
   ];
 
   const image = `${BASE_IMAGE_URL}/${dna}.gif`;
 
   const eyeAdj = getTraitAdjective(atEyes);
   const headAdj = getTraitAdjective(atHead);
-  const weaponAdj = getTraitAdjective(atWeapon);
+  const perkAdj = getTraitAdjective(atPerk);
 
   const atName = atType === "Normal" ? "" : `${atType} `;
 
-  const name = `${eyeAdj}${headAdj}${atName}${weaponAdj}${atSpecies}`;
+  const name = `${eyeAdj}${headAdj}${atName}${perkAdj}${atSpecies}`;
 
   const metadata: Metadata = {
     description: DESCIPTION,
