@@ -37,14 +37,17 @@ export async function createSharpFrame(
   traits: Traits,
   index: number,
   bcIndex: number,
-  specIndex: number
+  specIndex: number,
+  mimicIndex: number
 ): Promise<Buffer> {
   // retrieve traits from traits id
   const { color, background, species, eyewear, hat, perk } = traits;
   const mobPath = `./src/assets/mobs/${species}`;
   const colorPath =
     color !== "rainbow"
-      ? `${mobPath}/body/${color}/${index}.png`
+      ? species != "mimic"
+        ? `${mobPath}/body/${color}/${index}.png`
+        : `${mobPath}/body/${color}/${mimicIndex}.png`
       : `${mobPath}/body/${color}/${specIndex}.png`;
   const eyePath =
     eyewear != "" ? `${mobPath}/glasses/${eyewear}/${index}.png` : undefined;
@@ -210,10 +213,15 @@ export async function generateNewAsset(dna: string): Promise<Buffer> {
   let bcIndex = 0;
 
   for (let i = 0; i < frameAmnt; i++) {
-    const frameNum = traits.species != "mimic" ? frameNums[i] : mimicFrames[i];
     bcIndex = bcIndex < 4 ? bcIndex + 1 : 1;
     const specIndex = i + 1;
-    const buffer = await createSharpFrame(traits, frameNum, bcIndex, specIndex);
+    const buffer = await createSharpFrame(
+      traits,
+      frameNums[i],
+      bcIndex,
+      specIndex,
+      mimicFrames[i]
+    );
     await new Promise<void>(async (resolve) => {
       const image = new Image();
       image.onload = () => {
@@ -312,9 +320,12 @@ export function createDnaListFromStart(start: string): string[] {
   return dnaList.slice(startIndex);
 }
 
-async function generateRainbowSlimes(amount = 5): Promise<void> {}
-
-async function generateCrimsonSkeles(amount = 20): Promise<void> {}
+async function generateNFTAssetFromDNAList(dnaList: string[]): Promise<void> {
+  for (const dna of dnaList) {
+    console.log(`Generating NFT with DNA: ${dna}`);
+    await generateNFTAssetFromDNA(dna);
+  }
+}
 
 /**
  * Generate specials assets and replace in dna lists
@@ -325,8 +336,9 @@ async function generateCrimsonSkeles(amount = 20): Promise<void> {}
  *  - clown sekeleton (d0xc0x) 5
  *  - halo (dxxxhx) 15
  *  - gaming (dxx0gx) 10
- *  - mimic chest (d6000x) only 3
- *  - mimic toilette (d6100x) only 1
+ *  - mimic chest (d5700x) only 3
+ *  - mimic toilette (d58000) only 1
+ *  - egg (d60000) only 1 TODO: add egg (it is egg.gif)
  *
  * rainbow has 13 frames.
  * mimic and toilette have only 1 model * perks. no hats or eyewear
@@ -336,10 +348,76 @@ async function generateCrimsonSkeles(amount = 20): Promise<void> {}
  * demoness wings replaces perk
  * @param dnaList
  */
-async function generateSpecials(dnaList: string[]): Promise<void> {
-  for (const dna of dnaList) {
-    await generateNFTAssetFromDNA(dna);
-  }
+async function generateSpecials(): Promise<void> {
+  console.log(`Generating specials, 63`);
+  const rnbSlimesDnas = ["d16000", "d16001", "d16030", "d16040", "d160h0"];
+  const demonessWingsDnas = ["d40004", "d41004", "d42004", "d43004", "d44004"];
+  const crmsonSkeleDnas = [
+    "d05000",
+    "d05001",
+    "d05002",
+    "d05003",
+    "d05100",
+    "d05100",
+    "d05300",
+    "d05400",
+    "d05600",
+    "d05700",
+    "d05800",
+    "d05900",
+    "d05500",
+    "d05200",
+    "d05050",
+    "d05010",
+    "d05030",
+    "d05040",
+    "d050g0",
+    "d050h0",
+  ];
+  const clownSkeleDnas = ["d00c00", "d01c00", "d02c00", "d03c00", "d04c00"];
+  const haloDnas = [
+    "d000h0",
+    "d010h0",
+    "d021h0",
+    "d123h0",
+    "d145h0",
+    "d127h0",
+    "d218h0",
+    "d233h0",
+    "d224h0",
+    "d329h0",
+    "d342h0",
+    "d318h0",
+    "d419h0",
+    "d434h0",
+    "d443h0",
+  ];
+  const gamingDnas = [
+    "d010g0",
+    "d140g0",
+    "d220g0",
+    "d300g0",
+    "d457g0",
+    "d030g0",
+    "d120g0",
+    "d204g0",
+    "d345g0",
+    "d410g0",
+  ];
+  const mimicChestDnas = ["d57000", "d57001", "d57002"];
+  const mimicToiletteDnas = ["d58000"];
+  const specialDnas = [
+    ...rnbSlimesDnas,
+    ...demonessWingsDnas,
+    ...crmsonSkeleDnas,
+    ...clownSkeleDnas,
+    ...haloDnas,
+    ...gamingDnas,
+    ...mimicChestDnas,
+    ...mimicToiletteDnas,
+  ];
+  console.log(`Generating specials, ${specialDnas.length}`);
+  await generateNFTAssetFromDNAList(specialDnas);
 }
 
 async function generateNFTAssetsFromDNAList(
@@ -360,11 +438,20 @@ async function generateNFTAssetsFromDNAList(
 export async function createAllPossibleNFTs(): Promise<void> {
   // Create a list of all possible DNAs
   //const dnaList = createAllPossibleDNAs();
-  const dnaList = createDnaListFromStart("d40332");
+  const dnaList = createDnaListFromStart("d00000");
+
+  // Select 61 (or n) random items from the list
+  const randomDnas = [];
+  for (let i = 0; i < 65; i++) {
+    const randomIndex = Math.floor(Math.random() * dnaList.length);
+    randomDnas.push(dnaList[randomIndex]);
+    dnaList.splice(randomIndex, 1);
+  }
+  console.log(`NFTs reomved for specials:${randomDnas}`);
   console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
-  for (const dna of dnaList) {
-    console.log(`Generating NFT with DNA: ${dna}`);
-    await generateNFTAssetFromDNA(dna);
-  }
+  await generateNFTAssetFromDNAList(dnaList);
+
+  // Generate specials replacing removed values
+  await generateSpecials();
 }
