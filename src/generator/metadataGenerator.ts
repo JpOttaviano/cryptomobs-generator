@@ -61,12 +61,14 @@ function getTraitAdjective(trait: string): string {
       return "Holy ";
     case "wings":
       return "Flying ";
+    case "gaming headset":
+      return "Gamer ";
     default:
       return "";
   }
 }
 
-function generateMetadata(dna: string): Metadata {
+export function generateMetadata(dna: string): Metadata {
   // extracts ttraits from dna
   const traitNums = dna.toString().split("");
   const [, specie, color, eyewear, hat, perk] = traitNums;

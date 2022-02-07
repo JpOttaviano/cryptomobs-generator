@@ -13,6 +13,7 @@ import {
   Traits,
 } from "./types";
 import { uploadToCloudinary } from "../upload/cloudinary";
+import { createAndUploadMetadata } from "./metadataGenerator";
 
 const DIM_X = 1280;
 const DIM_Y = 1920;
@@ -325,6 +326,7 @@ async function generateNFTAssetFromDNAList(dnaList: string[]): Promise<void> {
     console.log(`Generating NFT with DNA: ${dna}`);
     await generateNFTAssetFromDNA(dna);
   }
+  await createAndUploadMetadata(dnaList);
 }
 
 /**
@@ -397,7 +399,7 @@ async function generateSpecials(): Promise<void> {
     "d140g0",
     "d220g0",
     "d300g0",
-    "d457g0",
+    "d447g0",
     "d030g0",
     "d120g0",
     "d204g0",

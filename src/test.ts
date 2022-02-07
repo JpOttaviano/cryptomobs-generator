@@ -1,4 +1,8 @@
 import dotenv from "dotenv";
+import {
+  createAndUploadMetadata,
+  generateMetadata,
+} from "./generator/metadataGenerator";
 /*import * as cloudinary from "cloudinary";
 import { generateJsons } from "./generator/metadataGenerator";
 
@@ -35,6 +39,14 @@ async function metadataTest(): Promise<void> {
   await metadataTest();
   console.log("Done");
 })();*/
+
+async function testMetadata(dna: string) {
+  const json = generateMetadata(dna);
+  console.log(json);
+}
+
 dotenv.config();
 
 console.log(process.env.CLOUD_NAME);
+
+const json = testMetadata("d160h0");
