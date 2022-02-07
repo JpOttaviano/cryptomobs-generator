@@ -40,7 +40,6 @@ export const colors = [
   "pink",
   "crimson",
   "rainbow",
-  "chest",
   "toilette",
 ];
 

@@ -3,11 +3,45 @@ import cloudinary from "cloudinary";
 
 dotenv.config();
 
-const { CLOUD_NAME = "", API_KEY = "", API_SECRET = "" } = process.env;
+const {
+  CLOUD_NAME = "crypt0m0b5",
+  API_KEY = "926187815695622",
+  API_SECRET = "FE4zDHRqAElJbXfF7k2r1bqHPLY",
+} = process.env;
 
 const ASSETS_PATH = "assets";
+const METADATA_PATH = "metadata";
 
-export async function uploadToCloudinary(
+export async function uploadJsonToCloudinary(
+  json: any,
+  name: string
+): Promise<any> {
+  const data = Buffer.from(JSON.stringify(json)).toString("base64");
+  console.log(`Uploading asset: ${name}`);
+  cloudinary.v2.config({
+    cloud_name: CLOUD_NAME,
+    api_key: API_KEY,
+    api_secret: API_SECRET,
+  });
+  const jsonName = `${METADATA_PATH}/${name}.json`;
+  const base64String = `data:application/json;base64,${data}`;
+  const res = await cloudinary.v2.uploader.upload(
+    base64String,
+    {
+      public_id: jsonName,
+      resource_type: "raw",
+    },
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      //console.log(result);
+    }
+  );
+  return res;
+}
+
+export async function uploadGifToCloudinary(
   name: string,
   buffer: Buffer
 ): Promise<any> {
@@ -28,7 +62,7 @@ export async function uploadToCloudinary(
       if (err) {
         console.log(err);
       }
-      console.log(result);
+      //console.log(result);
     }
   );
   console.log(res);

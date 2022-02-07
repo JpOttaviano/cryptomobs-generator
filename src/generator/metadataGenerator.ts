@@ -3,10 +3,13 @@ import dotenv from "dotenv";
 import cloudinary from "cloudinary";
 import { eyes, head, type, species, perks } from "./traitsnames";
 import { Attribute, Metadata } from "./types";
+import { uploadJsonToCloudinary } from "../upload/cloudinary";
 
 dotenv.config();
 
-const { BASE_IMAGE_URL } = process.env;
+const {
+  BASE_IMAGE_URL = "https://res.cloudinary.com/crypt0m0b5/image/upload/assets/",
+} = process.env;
 const EXTERNAL_URL = "https://cryptomobs.world/";
 const DESCIPTION = "Monster escaped from a dungeon.";
 
@@ -144,15 +147,18 @@ export async function uploadMetadata(data: Metadata[]): Promise<void> {
 export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
   //const jsons = generateJsons(dnas);
   let num = 0;
+  console.log(`Generating ${dnas.length} metadata files`);
   for (const dna of dnas) {
     const json = generateMetadata(dna);
-    console.log(json);
+    //console.log(json);
     num++;
-    const path = `./metadata/${dna.toString()}.json`;
+    // upload to cloudinary
+    await uploadJsonToCloudinary(json, dna);
+    const path = `./metadata/${dna}.json`;
     fs.writeFileSync(path, JSON.stringify(json));
-    if (num > 10) {
+    /*if (num > 10) {
       break;
-    }
+    }*/
   }
   console.log(`${num} jsons created`);
 }

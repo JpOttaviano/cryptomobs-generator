@@ -3,6 +3,7 @@ import {
   createAndUploadMetadata,
   generateMetadata,
 } from "./generator/metadataGenerator";
+import { uploadJsonToCloudinary } from "./upload/cloudinary";
 /*import * as cloudinary from "cloudinary";
 import { generateJsons } from "./generator/metadataGenerator";
 
@@ -42,11 +43,19 @@ async function metadataTest(): Promise<void> {
 
 async function testMetadata(dna: string) {
   const json = generateMetadata(dna);
-  console.log(json);
+  console.log(JSON.stringify(json));
+}
+
+async function uploadJson() {
+  const json = JSON.parse(
+    '{"description":"Monster egg waiting to hatch... what will it become?","external_url":"https://cryptomobs.world/","image":"https://res.cloudinary.com/crypt0m0b5/image/upload/assets/dxxxxx.gif","name":"Monster Egg","attributes":[{"trait_type":"type","value":"Normal"},{"trait_type":"species","value":"Egg"},{"trait_type":"eyes","value":"None"},{"trait_type":"head","value":"None"},{"trait_type":"perk","value":"None"}]}'
+  );
+
+  return await uploadJsonToCloudinary(json, "dxxxxx");
 }
 
 dotenv.config();
 
-console.log(process.env.CLOUD_NAME);
+//console.log(process.env.CLOUD_NAME);
 
-const json = testMetadata("d160h0");
+const json = uploadJson();

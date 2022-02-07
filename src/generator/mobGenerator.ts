@@ -12,7 +12,7 @@ import {
   species,
   Traits,
 } from "./types";
-import { uploadToCloudinary } from "../upload/cloudinary";
+import { uploadGifToCloudinary } from "../upload/cloudinary";
 import { createAndUploadMetadata } from "./metadataGenerator";
 
 const DIM_X = 1280;
@@ -262,8 +262,8 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
 
   // Upload asset to cloudinary
   try {
-    //await uploadToCloudinary(dna, asset);
-    console.log("sipped upload");
+    await uploadGifToCloudinary(dna, asset);
+    //console.log("sipped upload");
   } catch (error) {
     let retry = 0;
     console.log(`[ALERT]Error uploading. retrying in 4 secs.`, error);
@@ -271,7 +271,7 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
     while (retry < 3) {
       console.log(`Retry: ${retry}`);
       try {
-        await uploadToCloudinary(dna, asset);
+        await uploadGifToCloudinary(dna, asset);
         retry = 5;
       } catch (error) {
         console.log(`[ALERT]Error uploading again, retyring.`, error);
@@ -338,9 +338,11 @@ async function generateNFTAssetFromDNAList(dnaList: string[]): Promise<void> {
  *  - clown sekeleton (d0xc0x) 5
  *  - halo (dxxxhx) 15
  *  - gaming (dxx0gx) 10
- *  - mimic chest (d5700x) only 3
+ *  - mimic chest (d57000) only 1
  *  - mimic toilette (d58000) only 1
- *  - egg (d60000) only 1 TODO: add egg (it is egg.gif)
+ *  - egg (d60000) only 1 added manually
+ *
+ * 63 specials
  *
  * rainbow has 13 frames.
  * mimic and toilette have only 1 model * perks. no hats or eyewear
@@ -348,6 +350,8 @@ async function generateNFTAssetFromDNAList(dnaList: string[]): Promise<void> {
  * halo and gaming replace hats, no eyewear for gaming
  * sekele clown mask replaces eyewear, no hats
  * demoness wings replaces perk
+ *
+ * egg and egg metadata d60000 are added and uploaded manually already
  * @param dnaList
  */
 async function generateSpecials(): Promise<void> {
@@ -406,8 +410,8 @@ async function generateSpecials(): Promise<void> {
     "d345g0",
     "d410g0",
   ];
-  const mimicChestDnas = ["d57000", "d57001", "d57002"];
-  const mimicToiletteDnas = ["d58000"];
+  const mimicChestDnas = ["d50000"];
+  const mimicToiletteDnas = ["d57000"];
   const specialDnas = [
     ...rnbSlimesDnas,
     ...demonessWingsDnas,
@@ -442,9 +446,9 @@ export async function createAllPossibleNFTs(): Promise<void> {
   //const dnaList = createAllPossibleDNAs();
   const dnaList = createDnaListFromStart("d00000");
 
-  // Select 61 (or n) random items from the list
+  // Select 63 (or n) random items from the list
   const randomDnas = [];
-  for (let i = 0; i < 65; i++) {
+  for (let i = 0; i < 63; i++) {
     const randomIndex = Math.floor(Math.random() * dnaList.length);
     randomDnas.push(dnaList[randomIndex]);
     dnaList.splice(randomIndex, 1);

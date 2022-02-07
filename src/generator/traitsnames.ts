@@ -6,7 +6,6 @@ export const type = [
   "Cursed",
   "Crimson",
   "Rainbow",
-  "Chest",
   "Toilette",
 ];
 
@@ -48,6 +47,7 @@ export const species = [
   "Troll",
   "Succubus",
   "Mimic",
+  "Egg",
 ];
 
 export type Color = typeof type[number];
