@@ -8,8 +8,8 @@ export type Traits = {
   species: Species;
   color: Color;
   background?: Background;
-  hat?: Hat;
-  eyewear?: Glasses;
+  hat?: string;
+  eyewear?: string;
   perk?: Perk;
 };
 
@@ -40,35 +40,40 @@ export const colors = [
   "pink",
   "crimson",
   "rainbow",
+  "chest",
+  "toilette",
 ];
 
-export const perks = ["", "spirits", "kraken", "bloodCircle"];
+export const perks = ["", "spirits", "kraken", "bloodCircle", "wings"];
 
-export const glasses = [
-  "",
-  "geek",
-  "goof",
-  "cyberpunk",
-  "vaporwave",
-  "sun",
-  "synthblue",
-  "synthred",
-  "robot",
-  "specops",
-];
+export const glasses = {
+  0: "",
+  1: "geek",
+  2: "goof",
+  3: "cyberpunk",
+  4: "vaporwave",
+  5: "sun",
+  6: "synthblue",
+  7: "synthred",
+  8: "robot",
+  9: "specops",
+  c: "clown",
+};
 
-export const hats = [
-  "",
-  "bowler",
-  "top",
-  "witchblue",
-  "witchpurple",
-  "santa",
-  "leaf",
-  "pope",
-  "officer",
-  "cowboy",
-];
+export const hats = {
+  0: "",
+  1: "bowler",
+  2: "top",
+  3: "witchblue",
+  4: "witchpurple",
+  5: "santa",
+  6: "leaf",
+  7: "pope",
+  8: "officer",
+  9: "cowboy",
+  h: "halo",
+  g: "headset",
+};
 
 export const species = [
   "skeleton",
@@ -85,8 +90,8 @@ export type Color = typeof colors[number];
 
 export type Perk = typeof perks[number];
 
-export type Glasses = typeof glasses[number];
+//export type Glasses = typeof glasses[number];
 
-export type Hat = typeof hats[number];
+//export type Hat = typeof hats[number];
 
 export type Background = typeof backgrounds[number];
