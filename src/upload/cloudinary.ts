@@ -4,9 +4,9 @@ import cloudinary from "cloudinary";
 dotenv.config();
 
 const {
-  CLOUD_NAME = "crypt0m0b5",
-  API_KEY = "926187815695622",
-  API_SECRET = "FE4zDHRqAElJbXfF7k2r1bqHPLY",
+  CLOUD_NAME = "",
+  API_KEY = "",
+  API_SECRET = "",
 } = process.env;
 
 const ASSETS_PATH = "assets";

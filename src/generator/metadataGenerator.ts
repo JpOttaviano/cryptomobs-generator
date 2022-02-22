@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import cloudinary from "cloudinary";
 import { eyes, head, type, species, perks } from "./traitsnames";
 import { Attribute, Metadata } from "./types";
-import { uploadJsonToCloudinary } from "../upload/cloudinary";
 
 dotenv.config();
 
@@ -153,7 +152,7 @@ export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
     //console.log(json);
     num++;
     // upload to cloudinary
-    await uploadJsonToCloudinary(json, dna);
+    //await uploadJsonToCloudinary(json, dna);
     const path = `./metadata/${dna}.json`;
     fs.writeFileSync(path, JSON.stringify(json));
     /*if (num > 10) {

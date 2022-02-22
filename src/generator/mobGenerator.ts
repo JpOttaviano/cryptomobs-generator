@@ -12,7 +12,6 @@ import {
   species,
   Traits,
 } from "./types";
-import { uploadGifToCloudinary } from "../upload/cloudinary";
 import { createAndUploadMetadata, removeMetadata } from "./metadataGenerator";
 
 const DIM_X = 1280;
@@ -262,8 +261,8 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
 
   // Upload asset to cloudinary
   try {
-    await uploadGifToCloudinary(dna, asset);
-    //console.log("sipped upload");
+    //await uploadGifToCloudinary(dna, asset);
+    console.log("skipped upload");
   } catch (error) {
     let retry = 0;
     console.log(`[ALERT]Error uploading. retrying in 4 secs.`, error);
@@ -271,7 +270,7 @@ async function generateNFTAssetFromDNA(dna: string): Promise<void> {
     while (retry < 3) {
       console.log(`Retry: ${retry}`);
       try {
-        await uploadGifToCloudinary(dna, asset);
+        //await uploadGifToCloudinary(dna, asset);
         retry = 5;
       } catch (error) {
         console.log(`[ALERT]Error uploading again, retyring.`, error);
