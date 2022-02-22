@@ -13,7 +13,7 @@ import {
   Traits,
 } from "./types";
 import { uploadGifToCloudinary } from "../upload/cloudinary";
-import { createAndUploadMetadata } from "./metadataGenerator";
+import { createAndUploadMetadata, removeMetadata } from "./metadataGenerator";
 
 const DIM_X = 1280;
 const DIM_Y = 1920;
@@ -351,11 +351,14 @@ async function generateNFTAssetFromDNAList(dnaList: string[]): Promise<void> {
  * sekele clown mask replaces eyewear, no hats
  * demoness wings replaces perk
  *
+ * 62 specials to count
+ *
+ * after all is done, we need to manually remove 62
+ *
  * egg and egg metadata d60000 are added and uploaded manually already
  * @param dnaList
  */
-async function generateSpecials(): Promise<void> {
-  console.log(`Generating specials, 63`);
+export async function generateSpecials(): Promise<number> {
   const rnbSlimesDnas = ["d16000", "d16001", "d16030", "d16040", "d160h0"];
   const demonessWingsDnas = ["d40004", "d41004", "d42004", "d43004", "d44004"];
   const crmsonSkeleDnas = [
@@ -424,6 +427,50 @@ async function generateSpecials(): Promise<void> {
   ];
   console.log(`Generating specials, ${specialDnas.length}`);
   await generateNFTAssetFromDNAList(specialDnas);
+  return specialDnas.length;
+}
+
+function deleteAsset(dna: string) {
+  const path = `./nfts/${dna}.gif`;
+  if (fs.existsSync(path)) {
+    fs.unlinkSync(path);
+    removeMetadata(dna);
+  }
+}
+
+/**
+ * Remove extra jsons generated files and gifs. Even though uploaded, they wont be accesible.
+ * @param dnaList complete list to randomly iterate and remove
+ */
+export async function removeExtras(
+  dnaList: string[],
+  specNum: number
+): Promise<void> {
+  if (specNum !== 62) {
+    throw new Error(
+      `[ERROR]Specials number is not 62, generated ${specNum}. Please assess removal accordingly out of ${dnaList.length} assets`
+    );
+  }
+  console.log(`Removing extras, ${dnaList.length}`);
+  let deletedAssets = 0;
+  const randomDnas = [];
+  for (let i = 0; i < 62; i++) {
+    const randomIndex = Math.floor(Math.random() * dnaList.length);
+    const assetToDelete = dnaList[randomIndex];
+    randomDnas.push(dnaList[randomIndex]);
+    dnaList.splice(randomIndex, 1);
+    try {
+      deleteAsset(assetToDelete);
+    } catch (e) {
+      console.log(e);
+      throw new Error(
+        `[ERROR] Deleting asset ${assetToDelete}. Deleted ${deletedAssets} of 62 assets. Please manually delete remaining ${
+          62 - deletedAssets
+        } assets.`
+      );
+    }
+    deletedAssets++;
+  }
 }
 
 async function generateNFTAssetsFromDNAList(
@@ -447,17 +494,20 @@ export async function createAllPossibleNFTs(): Promise<void> {
   const dnaList = createDnaListFromStart("d00000");
 
   // Select 63 (or n) random items from the list
-  const randomDnas = [];
-  for (let i = 0; i < 63; i++) {
+
+  /*for (let i = 0; i < 63; i++) {
     const randomIndex = Math.floor(Math.random() * dnaList.length);
     randomDnas.push(dnaList[randomIndex]);
     dnaList.splice(randomIndex, 1);
-  }
-  console.log(`NFTs reomved for specials:${randomDnas}`);
+  }*/
+  //console.log(`NFTs reomved for specials:${randomDnas}`);
   console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
   await generateNFTAssetFromDNAList(dnaList);
 
   // Generate specials replacing removed values
-  await generateSpecials();
+  const specialsNum = await generateSpecials();
+
+  // Remove extras
+  await removeExtras(dnaList, specialsNum);
 }

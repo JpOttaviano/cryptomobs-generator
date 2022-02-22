@@ -3,6 +3,7 @@ import {
   createAndUploadMetadata,
   generateMetadata,
 } from "./generator/metadataGenerator";
+import { removeExtras } from "./generator/mobGenerator";
 import { uploadJsonToCloudinary } from "./upload/cloudinary";
 /*import * as cloudinary from "cloudinary";
 import { generateJsons } from "./generator/metadataGenerator";
@@ -54,8 +55,13 @@ async function uploadJson() {
   return await uploadJsonToCloudinary(json, "dxxxxx");
 }
 
+async function removalTest() {
+  const dnaList = ["d01232", "d01233", "d01234", "d01435"];
+  await removeExtras(dnaList, 62);
+}
+
 dotenv.config();
 
 //console.log(process.env.CLOUD_NAME);
 
-const json = uploadJson();
+const json = removalTest();

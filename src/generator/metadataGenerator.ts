@@ -163,6 +163,15 @@ export async function createAndUploadMetadata(dnas: string[]): Promise<void> {
   console.log(`${num} jsons created`);
 }
 
+// locally delete metadata
+export function removeMetadata(id: string): void {
+  const path = `./metadata/${id}.json`;
+  if (!fs.existsSync(path)) {
+    throw new Error(`Metadata file ${path} does not exist`);
+  }
+  fs.unlinkSync(path);
+}
+
 export async function createAndUploadMetadataRngId(
   dnas: string[]
 ): Promise<void> {
