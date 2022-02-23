@@ -415,12 +415,12 @@ export async function generateSpecials(): Promise<number> {
   const mimicChestDnas = ["d50000"];
   const mimicToiletteDnas = ["d57000"];
   const specialDnas = [
-    ...rnbSlimesDnas,
-    ...demonessWingsDnas,
-    ...crmsonSkeleDnas,
-    ...clownSkeleDnas,
-    ...haloDnas,
-    ...gamingDnas,
+    //...rnbSlimesDnas,
+    //...demonessWingsDnas,
+    //...crmsonSkeleDnas,
+    //...clownSkeleDnas,
+    //...haloDnas,
+    //...gamingDnas,
     ...mimicChestDnas,
     ...mimicToiletteDnas,
   ];
@@ -500,9 +500,9 @@ export async function createAllPossibleNFTs(): Promise<void> {
     dnaList.splice(randomIndex, 1);
   }*/
   //console.log(`NFTs reomved for specials:${randomDnas}`);
-  console.log(`Generating all possible NFTs: ${dnaList.length}...`);
+  //console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
-  await generateNFTAssetFromDNAList(dnaList);
+  //await generateNFTAssetFromDNAList(dnaList);
 
   // Generate specials replacing removed values
   const specialsNum = await generateSpecials();
