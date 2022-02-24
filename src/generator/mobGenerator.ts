@@ -415,17 +415,24 @@ export async function generateSpecials(): Promise<number> {
   const mimicChestDnas = ["d50000"];
   const mimicToiletteDnas = ["d57000"];
   const specialDnas = [
-    //...rnbSlimesDnas,
-    //...demonessWingsDnas,
-    //...crmsonSkeleDnas,
-    //...clownSkeleDnas,
-    //...haloDnas,
-    //...gamingDnas,
+    ...rnbSlimesDnas,
+    ...demonessWingsDnas,
+    ...crmsonSkeleDnas,
+    ...clownSkeleDnas,
+    ...haloDnas,
+    ...gamingDnas,
+    //...mimicChestDnas,
+    //...mimicToiletteDnas,
+  ];
+
+  const mimics = [
     ...mimicChestDnas,
     ...mimicToiletteDnas,
-  ];
+  ]
   console.log(`Generating specials, ${specialDnas.length}`);
-  await generateNFTAssetFromDNAList(specialDnas);
+  await generateNFTAssetFromDNAList(mimics);
+
+  await createAndUploadMetadata(specialDnas);
   return specialDnas.length;
 }
 
@@ -445,7 +452,7 @@ export async function removeExtras(
   dnaList: string[],
   specNum: number
 ): Promise<void> {
-  if (specNum !== 62) {
+  if (specNum !== 63) {
     throw new Error(
       `[ERROR]Specials number is not 62, generated ${specNum}. Please assess removal accordingly out of ${dnaList.length} assets`
     );
@@ -453,7 +460,7 @@ export async function removeExtras(
   console.log(`Removing extras, ${dnaList.length}`);
   let deletedAssets = 0;
   const randomDnas = [];
-  for (let i = 0; i < 62; i++) {
+  for (let i = 0; i < 63; i++) {
     const randomIndex = Math.floor(Math.random() * dnaList.length);
     const assetToDelete = dnaList[randomIndex];
     randomDnas.push(dnaList[randomIndex]);
@@ -464,7 +471,7 @@ export async function removeExtras(
       console.log(e);
       throw new Error(
         `[ERROR] Deleting asset ${assetToDelete}. Deleted ${deletedAssets} of 62 assets. Please manually delete remaining ${
-          62 - deletedAssets
+          63 - deletedAssets
         } assets.`
       );
     }
@@ -506,7 +513,7 @@ export async function createAllPossibleNFTs(): Promise<void> {
 
   // Generate specials replacing removed values
   const specialsNum = await generateSpecials();
-
+  console.log(specialsNum)
   // Remove extras
-  await removeExtras(dnaList, specialsNum);
+  await removeExtras(dnaList, 63);
 }
