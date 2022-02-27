@@ -3,11 +3,7 @@ import cloudinary from "cloudinary";
 
 dotenv.config();
 
-const {
-  CLOUD_NAME = "",
-  API_KEY = "",
-  API_SECRET = "",
-} = process.env;
+const { CLOUD_NAME = "", API_KEY = "", API_SECRET = "" } = process.env;
 
 const ASSETS_PATH = "assets";
 const METADATA_PATH = "metadata";

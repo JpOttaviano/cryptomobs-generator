@@ -421,18 +421,18 @@ export async function generateSpecials(): Promise<number> {
     ...clownSkeleDnas,
     ...haloDnas,
     ...gamingDnas,
-    //...mimicChestDnas,
-    //...mimicToiletteDnas,
-  ];
-
-  const mimics = [
     ...mimicChestDnas,
     ...mimicToiletteDnas,
-  ]
-  console.log(`Generating specials, ${specialDnas.length}`);
-  await generateNFTAssetFromDNAList(mimics);
+  ];
 
-  await createAndUploadMetadata(specialDnas);
+  /*const mimics = [
+    ...mimicChestDnas,
+    ...mimicToiletteDnas,
+  ]*/
+  console.log(`Generating specials, ${specialDnas.length} + 1`);
+  await generateNFTAssetFromDNAList(specialDnas);
+
+  //await createAndUploadMetadata(specialDnas);
   return specialDnas.length;
 }
 
@@ -454,7 +454,7 @@ export async function removeExtras(
 ): Promise<void> {
   if (specNum !== 63) {
     throw new Error(
-      `[ERROR]Specials number is not 62, generated ${specNum}. Please assess removal accordingly out of ${dnaList.length} assets`
+      `[ERROR]Specials number is not 63, generated ${specNum}. Please assess removal accordingly out of ${dnaList.length} assets`
     );
   }
   console.log(`Removing extras, ${dnaList.length}`);
@@ -470,7 +470,7 @@ export async function removeExtras(
     } catch (e) {
       console.log(e);
       throw new Error(
-        `[ERROR] Deleting asset ${assetToDelete}. Deleted ${deletedAssets} of 62 assets. Please manually delete remaining ${
+        `[ERROR] Deleting asset ${assetToDelete}. Deleted ${deletedAssets} of 63 assets. Please manually delete remaining ${
           63 - deletedAssets
         } assets.`
       );
@@ -507,13 +507,17 @@ export async function createAllPossibleNFTs(): Promise<void> {
     dnaList.splice(randomIndex, 1);
   }*/
   //console.log(`NFTs reomved for specials:${randomDnas}`);
-  //console.log(`Generating all possible NFTs: ${dnaList.length}...`);
+  console.log(`Generating all possible NFTs: ${dnaList.length}...`);
   // Generate Asset for each DNA
-  //await generateNFTAssetFromDNAList(dnaList);
+  await generateNFTAssetFromDNAList(dnaList);
 
   // Generate specials replacing removed values
+  console.log(`Generating specials...`);
   const specialsNum = await generateSpecials();
-  console.log(specialsNum)
+  const removeNum = specialsNum + 1;
+  console.log(
+    `Removing extras: ${removeNum} <- thhis number should be 63. SI NO ES 63 ALGO ANDA MAL`
+  );
   // Remove extras
-  await removeExtras(dnaList, 63);
+  await removeExtras(dnaList, removeNum);
 }
